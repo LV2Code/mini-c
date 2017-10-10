@@ -4,6 +4,12 @@
 
 	$products = $_SESSION['products'];
 
+	if( isset( $_POST['product_id'] ) ){
+
+		$product_id = $_POST['product_id'];
+
+		unset( $_SESSION['products'][ $product_id ] );
+	}
 ?>
 
 
@@ -56,6 +62,8 @@
 
       			<?php 
 
+      				$i = 0;
+
       				foreach ( $products as $product ) { 	?>
 
 
@@ -70,7 +78,7 @@
 				        <td>john@example.com</td>
 
 				        <td width="1%">
-				        	<button type="button" class="btn btn-default btn-sm">
+				        	<button type="button" class="btn btn-default btn-sm remove_button" id="remove_<?php echo $i; ?>">
 					          <span class="glyphicon glyphicon-remove"  style="color:RED"></span>  
 					        </button>
 
@@ -80,6 +88,8 @@
 
 				<?php      				
       					
+						$i++;
+
       				}
       			?>
      
@@ -155,3 +165,36 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </html>
+
+
+
+
+<script type="text/javascript">
+	
+
+	$(document).ready( function(){
+
+		$(".remove_button").click( function(){
+
+			$(this).parent().parent().remove();
+
+			var id = $(this).attr("id");
+
+			id = id.replace("remove_", "");
+
+		 	$.ajax({
+
+                    type: "post",
+
+                    data: { 
+                    		"product_id": id,
+                    },
+
+                    success: function( responce ){
+                		
+                		console.log( responce );
+                	}
+        	});
+		});
+	});
+</script>
